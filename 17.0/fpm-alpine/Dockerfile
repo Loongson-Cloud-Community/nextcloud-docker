@@ -1,5 +1,6 @@
 # DO NOT EDIT: created by update.sh from Dockerfile-alpine.template
-FROM php:7.3-fpm-alpine3.11
+FROM cr.loongnix.cn/library/php:7.4.30-fpm-alpine
+MAINTAINER Xuhui Qiang <qiangxuhui@loongson.cn>
 
 # entrypoint.sh and cron.sh dependencies
 RUN set -ex; \
@@ -35,7 +36,7 @@ RUN set -ex; \
         gmp-dev \
     ; \
     \
-    docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr; \
+    docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp; \
     docker-php-ext-configure ldap; \
     docker-php-ext-install -j "$(nproc)" \
         exif \
@@ -108,10 +109,10 @@ RUN set -ex; \
         "https://download.nextcloud.com/server/releases/nextcloud-${NEXTCLOUD_VERSION}.tar.bz2.asc"; \
     export GNUPGHOME="$(mktemp -d)"; \
 # gpg key from https://nextcloud.com/nextcloud.asc
-    gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys 28806A878AE423A28372792ED75899B9A724937A; \
-    gpg --batch --verify nextcloud.tar.bz2.asc nextcloud.tar.bz2; \
+    #gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys 28806A878AE423A28372792ED75899B9A724937A; \
+    #gpg --batch --verify nextcloud.tar.bz2.asc nextcloud.tar.bz2; \
     tar -xjf nextcloud.tar.bz2 -C /usr/src/; \
-    gpgconf --kill all; \
+    #gpgconf --kill all; \
     rm -r "$GNUPGHOME" nextcloud.tar.bz2.asc nextcloud.tar.bz2; \
     rm -rf /usr/src/nextcloud/updater; \
     mkdir -p /usr/src/nextcloud/data; \
